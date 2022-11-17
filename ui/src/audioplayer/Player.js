@@ -16,13 +16,20 @@ import useCurrentTheme from '../themes/useCurrentTheme'
 import config from '../config'
 import useStyle from './styles'
 import AudioTitle from './AudioTitle'
-import { clearQueue, currentPlaying, setVolume, syncQueue } from '../actions'
+import {
+  playTracks,
+  clearQueue,
+  currentPlaying,
+  setVolume,
+  syncQueue,
+} from '../actions'
 import PlayerToolbar from './PlayerToolbar'
 import { sendNotification } from '../utils'
 import subsonic from '../subsonic'
 import locale from './locale'
 import { keyMap } from '../hotkeys'
 import keyHandlers from './keyHandlers'
+import { syncPlayQueue, getStoredQueue } from '../store/persistState'
 
 const Player = () => {
   const theme = useCurrentTheme()
@@ -105,6 +112,82 @@ const Player = () => {
     return idx !== null ? playerState.queue[idx + 1] : null
   }, [playerState])
 
+  function parseMe(data) {
+    let parsedJSON = []
+    for (var i = 0; i < data.length; i++) parsedJSON.push(data[i].id)
+    return parsedJSON
+  }
+  function parseMe2(data) {
+    let parsedJSON = {}
+    for (var i = 0; i < data.length; i++) {
+      let obj = {
+        // playCount: 0,
+        // playDate: "0001-01-01T00:00:00Z",
+        // rating: 0,
+        // starred: false,
+        // starredAt: "0001-01-01T00:00:00Z",
+        // bookmarkPosition: 0,
+        id: data[i].id,
+        path: data[i].path,
+        title: data[i].title,
+        album: data[i].album,
+        artistId: data[i].artistId,
+        artist: data[i].artist,
+        albumArtistId: data[i].albumArtistId,
+        albumArtist: data[i].artist,
+        albumId: data[i].albumId,
+        // hasCoverArt: true,
+        trackNumber: data[i].track,
+        discNumber: data[i].discNumber,
+        year: data[i].year,
+        size: data[i].size,
+        suffix: data[i].suffix,
+        duration: data[i].duration,
+        bitRate: data[i].bitRate,
+        // channels: 2,
+        genre: data[i].genre,
+        // genres: [
+        //     {
+        //         "id": "3787e11b-161d-4ea6-bfbe-32804ebfdc2b",
+        //         "name": "Rock"
+        //     }
+        // ],
+        // fullText: " a away death decade destruction, finger five of punch vol.2 walk",
+        orderTitle: data[i].title,
+        // orderAlbumName: "Decade of Destruction, Vol.2",
+        // orderArtistName: "Five Finger Death Punch",
+        // orderAlbumArtistName: "Five Finger Death Punch",
+        // compilation: false,
+        createdAt: data[i].created,
+        // updatedAt: "2022-03-08T18:23:45.0061284Z"
+      }
+      parsedJSON[data[i].id] = obj
+    }
+    return parsedJSON
+  }
+  const updateQueue = useCallback(() => {
+    getStoredQueue().then((data) => {
+      console.log('getStoredQueue log:')
+      console.log(data)
+      let data_parsed = parseMe2(data['subsonic-response'].playQueue.entry)
+      let data_ids = parseMe(data['subsonic-response'].playQueue.entry)
+      dispatch(clearQueue())
+      dispatch(
+        playTracks(
+          data_parsed,
+          data_ids,
+          data['subsonic-response'].playQueue.current
+        )
+      )
+      audioInstance.playByIndex(
+        data_ids.indexOf(data['subsonic-response'].playQueue.current)
+      )
+    })
+    console.log('getStoredQueue log for playerstate:')
+    console.log(playerState)
+    return
+  }, [dispatch, playerState, audioInstance])
+  
   const onAudioProgress = useCallback(
     (info) => {
       if (info.ended) {
@@ -166,8 +249,9 @@ const Player = () => {
           )
         }
       }
+      syncPlayQueue(playerState.queue, currentPlaying(info).data)
     },
-    [dispatch, showNotifications, startTime]
+    [dispatch, showNotifications, startTime, playerState.queue]
   )
 
   const onAudioPlayTrackChange = useCallback(() => {
@@ -197,10 +281,13 @@ const Player = () => {
   )
 
   const onCoverClick = useCallback((mode, audioLists, audioInfo) => {
-    if (mode === 'full' && audioInfo?.song?.albumId) {
-      window.location.href = `#/album/${audioInfo.song.albumId}/show`
-    }
-  }, [])
+      if (mode === 'full' && audioInfo?.song?.albumId) {
+        window.location.href = `#/album/${audioInfo.song.albumId}/show`
+      }
+      updateQueue()
+    },
+    [updateQueue]
+  )
 
   const onBeforeDestroy = useCallback(() => {
     return new Promise((resolve, reject) => {
