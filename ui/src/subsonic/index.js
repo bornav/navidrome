@@ -66,6 +66,13 @@ const getArtistInfo = (id) => {
 const streamUrl = (id) => {
   return baseUrl(url('stream', id, { ts: true }))
 }
+const syncPlayQueue = (current, queue) => {
+  return current === undefined
+    ? httpClient(url('savePlayQueue') + queue)
+    : httpClient(url('savePlayQueue') + queue + `&current=${current.song.id}`)
+}
+
+const getStoredQueue = () => httpClient(url('getPlayQueue'))
 
 export default {
   url,
@@ -79,5 +86,7 @@ export default {
   getScanStatus,
   getCoverArtUrl,
   streamUrl,
+  syncPlayQueue,
+  getStoredQueue,
   getArtistInfo,
 }
