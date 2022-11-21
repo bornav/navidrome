@@ -18,6 +18,7 @@ func (api *Router) GetUser(r *http.Request) (*responses.Subsonic, error) {
 	response.User.Username = loggedUser.UserName
 	response.User.AdminRole = loggedUser.IsAdmin
 	response.User.Email = loggedUser.Email
+	response.User.SyncPlaylist = loggedUser.SyncPlaylist
 	response.User.StreamRole = true
 	response.User.DownloadRole = true
 	response.User.ScrobblingEnabled = true
@@ -36,6 +37,7 @@ func (api *Router) GetUsers(r *http.Request) (*responses.Subsonic, error) {
 	user.StreamRole = true
 	user.DownloadRole = true
 	user.ScrobblingEnabled = true
+	user.SyncPlaylist = loggedUser.SyncPlaylist
 	response := newResponse()
 	response.Users = &responses.Users{User: []responses.User{user}}
 	return response, nil

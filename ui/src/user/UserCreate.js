@@ -56,6 +56,7 @@ const UserCreate = (props) => {
         <TextInput source="email" validate={[email()]} />
         <PasswordInput source="password" validate={[required()]} />
         <BooleanInput source="isAdmin" defaultValue={false} />
+        <BooleanInput source="syncPlaylist" defaultValue={false} />
       </SimpleForm>
     </Create>
   )

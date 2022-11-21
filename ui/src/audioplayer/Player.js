@@ -128,6 +128,9 @@ const Player = () => {
     return songObj
   }
   const updateQueue = useCallback(() => {
+    if (localStorage.getItem('sync') === 'false') {
+      return
+    }
     subsonic.getStoredQueue().then((res) => {
       let data = JSON.parse(res.body)
       getSongData(data['subsonic-response'].playQueue.entry).then((res) => {
@@ -205,12 +208,14 @@ const Player = () => {
           )
         }
       }
-      let ids = ''
-      for (let i = 0; i < playerState.queue.length; i++) {
-        let song = playerState.queue[i]['trackId']
-        ids += `&id=${song}`
+      if (localStorage.getItem('sync') === 'true') {
+        let ids = ''
+        for (let i = 0; i < playerState.queue.length; i++) {
+          let song = playerState.queue[i]['trackId']
+          ids += `&id=${song}`
+        }
+        subsonic.syncPlayQueue(currentPlaying(info).data, ids)
       }
-      subsonic.syncPlayQueue(currentPlaying(info).data, ids)
     },
     [dispatch, showNotifications, startTime, playerState.queue]
   )
@@ -246,6 +251,10 @@ const Player = () => {
       if (mode === 'full' && audioInfo?.song?.albumId) {
         window.location.href = `#/album/${audioInfo.song.albumId}/show`
       }
+
+      //var val2 = document.getElementsByTagName("syncPlaylists")
+      //var val = document.getElementById("syncPlaylists")
+      //console.log(val)
       updateQueue()
     },
     [updateQueue]

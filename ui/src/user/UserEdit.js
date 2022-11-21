@@ -90,6 +90,7 @@ const UserEdit = (props) => {
         notify('resources.user.notifications.updated', 'info', {
           smart_count: 1,
         })
+        localStorage.setItem('sync', values.syncPlaylist ? 'true' : 'false')
         permissions === 'admin' ? redirect('/user') : refresh()
       } catch (error) {
         if (error.body.errors) {
@@ -129,6 +130,7 @@ const UserEdit = (props) => {
         {permissions === 'admin' && (
           <BooleanInput source="isAdmin" initialValue={false} />
         )}
+        <BooleanInput source="syncPlaylist" initialValue={false} />
         <DateField variant="body1" source="lastLoginAt" showTime />
         {/*<DateField source="lastAccessAt" showTime />*/}
         <DateField variant="body1" source="updatedAt" showTime />
