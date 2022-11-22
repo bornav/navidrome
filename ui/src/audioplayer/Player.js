@@ -119,14 +119,18 @@ const Player = () => {
   }
 
   async function getSongData(data) {
+    let idString = `/api/song?id=${data[0].id}`
+    for (var i = 1; i < data.length; i++) {
+      idString = `${idString}&id=${data[i].id}`
+    }
+    const object = await httpClient(idString)
     let songObj = {}
-    for (var i = 0; i < data.length; i++) {
-      //for long playlist consider creating all the requests, and when they finish recombine them in proper order
-      const object = await httpClient(`/api/song/${data[i].id}`)
-      songObj[data[i].id] = JSON.parse(object.body)
+    for (i = 0; i < data.length; i++) {
+      songObj[object.json[i].id] = object.json[i]
     }
     return songObj
   }
+
   const updateQueue = useCallback(() => {
     if (localStorage.getItem('sync') === 'false') {
       return
@@ -251,10 +255,6 @@ const Player = () => {
       if (mode === 'full' && audioInfo?.song?.albumId) {
         window.location.href = `#/album/${audioInfo.song.albumId}/show`
       }
-
-      //var val2 = document.getElementsByTagName("syncPlaylists")
-      //var val = document.getElementById("syncPlaylists")
-      //console.log(val)
       updateQueue()
     },
     [updateQueue]
