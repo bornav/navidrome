@@ -112,13 +112,8 @@ const Player = () => {
     return idx !== null ? playerState.queue[idx + 1] : null
   }, [playerState])
 
-  function getSongId(data) {
-    let songIDs = []
-    for (var i = 0; i < data.length; i++) songIDs.push(data[i].id)
-    return songIDs
-  }
-
-  async function getSongData(data) {
+  const getSongData = async (data) => {
+    //move this one to external
     let idString = `/api/song?id=${data[0].id}`
     for (var i = 1; i < data.length; i++) {
       idString = `${idString}&id=${data[i].id}`
@@ -126,28 +121,42 @@ const Player = () => {
     const object = await httpClient(idString)
     let songObj = {}
     for (i = 0; i < data.length; i++) {
+      //songObj[data[i].id] = object.json[object.json.findIndex(index => {return  index.id === data[i].id;})]
       songObj[object.json[i].id] = object.json[i]
     }
     return songObj
   }
-
+  //will be removed
   const updateQueue = useCallback(() => {
     if (localStorage.getItem('sync') === 'false') {
       return
     }
-    subsonic.getStoredQueue().then((res) => {
-      let data = JSON.parse(res.body)
-      getSongData(data['subsonic-response'].playQueue.entry).then((res) => {
-        dispatch(clearQueue())
-        let data_ids = getSongId(data['subsonic-response'].playQueue.entry)
-        dispatch(
-          playTracks(res, data_ids, data['subsonic-response'].playQueue.current)
-        )
-        audioInstance.playByIndex(
-          data_ids.indexOf(data['subsonic-response'].playQueue.current)
-        )
+    subsonic
+      .getStoredQueue()
+      .then((res) => {
+        let data = JSON.parse(res.body)
+        getSongData(data['subsonic-response'].playQueue.entry)
+          .then((res) => {
+            dispatch(clearQueue())
+            let data_ids = GetSongId(data['subsonic-response'].playQueue.entry)
+            dispatch(
+              playTracks(
+                res,
+                data_ids,
+                data['subsonic-response'].playQueue.current
+              )
+            )
+            audioInstance.playByIndex(
+              data_ids.indexOf(data['subsonic-response'].playQueue.current)
+            )
+          })
+          .catch((err) => {
+            console.log(err)
+          })
       })
-    })
+      .catch((err) => {
+        console.log(err)
+      })
     return
   }, [dispatch, audioInstance])
 
@@ -303,4 +312,10 @@ const Player = () => {
   )
 }
 
-export { Player }
+const GetSongId = (data) => {
+  let songIDs = []
+  for (var i = 0; i < data.length; i++) songIDs.push(data[i].id)
+  return songIDs
+}
+
+export { Player, GetSongId }
