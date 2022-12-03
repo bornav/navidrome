@@ -3,27 +3,34 @@ import PropTypes from 'prop-types'
 import CloudDownloadOutlinedIcon from '@material-ui/icons/CloudDownloadOutlined'
 import { IconButton } from '@material-ui/core'
 import { useDispatch } from 'react-redux'
-import { playTracks, clearQueue, currentPlaying } from '../actions'
+import { playTracks } from '../actions'
 import { GetSongId } from '../audioplayer/Player'
 import { httpClient } from '../dataProvider'
 import subsonic from '../subsonic'
 
-const UpdateQueueButton = ({ record, size, className }) => {
+const UpdateQueueButton = (size) => {
   const dispatch = useDispatch()
-  const getSongData = async (data) => {
-    let idString = `/api/song?id=${data[0].id}`
-    for (var i = 1; i < data.length; i++) {
-      idString = `${idString}&id=${data[i].id}`
-    }
-    const object = await httpClient(idString)
+
+  //gets the data of the currently playing songs and formats the data
+
+  //this one is used when we use the album list to play the songs(does not support duplicate songs)
+  const queueBuilderId = (data, object) => {
     let songObj = {}
-    for (i = 0; i < data.length; i++) {
-      //placeholder to be added when the detection of the queurest is implemented
-      // uncommenting this makes the request the same as when using the ui to set the playlist
-      // let obj = object.json[object.json.findIndex(index => {return  index.id === data[i].id;})]
-      // obj.comment = ""
-      // songObj[data[i].id] = obj
-      // songObj[data[i].id] = object.json[object.json.findIndex(index => {return  index.id === data[i].id;})]
+    for (let i = 0; i < data.length; i++) {
+      songObj[data[i].id] =
+        object.json[
+          object.json.findIndex((index) => {
+            return index.id === data[i].id
+          })
+        ]
+    }
+    return songObj
+  }
+
+  //supports duplicate songs
+  const queueBuilderInc = (data, object) => {
+    let songObj = {}
+    for (let i = 0; i < data.length; i++) {
       songObj[i] =
         object.json[
           object.json.findIndex((index) => {
@@ -33,7 +40,18 @@ const UpdateQueueButton = ({ record, size, className }) => {
     }
     return songObj
   }
+
   const updateQueueButton = useCallback(() => {
+    const getSongData = async (data, state) => {
+      let idString = `/api/song?id=${data[0].id}`
+      for (let i = 1; i < data.length; i++) {
+        idString = `${idString}&id=${data[i].id}`
+      }
+      const object = await httpClient(idString)
+      return state === false
+        ? queueBuilderInc(data, object)
+        : queueBuilderId(data, object)
+    }
     if (localStorage.getItem('sync') === 'false') {
       return
     }
@@ -41,29 +59,32 @@ const UpdateQueueButton = ({ record, size, className }) => {
       .getStoredQueue()
       .then((res) => {
         let data = JSON.parse(res.body)
-        getSongData(data['subsonic-response'].playQueue.entry)
+        getSongData(
+          data['subsonic-response'].playQueue.entry,
+          data['subsonic-response'].playQueue.current.length > 4 ? true : false
+        )
           .then((res) => {
-            const res_new = {}
-            let size = data['subsonic-response'].playQueue.entry.length
-            for (let i = 0; i < size; i++) {
-              //this will be remove, just a brute force solution to test the concept
-              res_new[i + 1] = res[i]
-              res_new[i + 1].mediaFileId = res[i].id
-              res_new[i + 1].id = `${i + 1}`
+            let res_new = {}
+            let data_ids
+            let current
+            if (data['subsonic-response'].playQueue.current.length > 4) {
+              data_ids = GetSongId(data['subsonic-response'].playQueue.entry)
+              res_new = res
+              current = res[data['subsonic-response'].playQueue.current].id
+            } else {
+              let size = data['subsonic-response'].playQueue.entry.length
+              //dealing with the pass by reference
+              for (let i = 0; i < size; i++) {
+                let temp = Object.assign({}, res[i])
+                temp.mediaFileId = res[i].id
+                temp.id = `${i + 1}`
+                res_new[i + 1] = temp
+              }
+
+              data_ids = Array.from({ length: size }, (v, i) => `${++i}`)
+              current = data['subsonic-response'].playQueue.current
             }
-            let data_ids = Array.from({ length: size }, (v, i) => `${++i}`)
-            //let data_ids = GetSongId(data['subsonic-response'].playQueue.entry)
-            dispatch(
-              playTracks(
-                res_new,
-                data_ids,
-                data['subsonic-response'].playQueue.current
-              )
-            ) // why is it not setting the track to the desired one?, but always to the first one, even tho the return values are the same
-            //before moving this this was located inside of the Player object and it had access to the audioInstance so as a fixup to above manulay set the playqueue
-            // audioInstance.playByIndex(
-            //   data_ids.indexOf(data['subsonic-response'].playQueue.current)
-            // )
+            dispatch(playTracks(res_new, data_ids, current))
           })
           .catch((err) => {
             console.log(err)

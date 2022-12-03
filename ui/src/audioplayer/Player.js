@@ -16,20 +16,13 @@ import useCurrentTheme from '../themes/useCurrentTheme'
 import config from '../config'
 import useStyle from './styles'
 import AudioTitle from './AudioTitle'
-import {
-  playTracks,
-  clearQueue,
-  currentPlaying,
-  setVolume,
-  syncQueue,
-} from '../actions'
+import { clearQueue, currentPlaying, setVolume, syncQueue } from '../actions'
 import PlayerToolbar from './PlayerToolbar'
 import { sendNotification } from '../utils'
 import subsonic from '../subsonic'
 import locale from './locale'
 import { keyMap } from '../hotkeys'
 import keyHandlers from './keyHandlers'
-import { httpClient } from '../dataProvider'
 
 const Player = () => {
   const theme = useCurrentTheme()
@@ -112,54 +105,6 @@ const Player = () => {
     return idx !== null ? playerState.queue[idx + 1] : null
   }, [playerState])
 
-  const getSongData = async (data) => {
-    //move this one to external
-    let idString = `/api/song?id=${data[0].id}`
-    for (var i = 1; i < data.length; i++) {
-      idString = `${idString}&id=${data[i].id}`
-    }
-    const object = await httpClient(idString)
-    let songObj = {}
-    for (i = 0; i < data.length; i++) {
-      //songObj[data[i].id] = object.json[object.json.findIndex(index => {return  index.id === data[i].id;})]
-      songObj[object.json[i].id] = object.json[i]
-    }
-    return songObj
-  }
-  //will be removed
-  const updateQueue = useCallback(() => {
-    if (localStorage.getItem('sync') === 'false') {
-      return
-    }
-    subsonic
-      .getStoredQueue()
-      .then((res) => {
-        let data = JSON.parse(res.body)
-        getSongData(data['subsonic-response'].playQueue.entry)
-          .then((res) => {
-            dispatch(clearQueue())
-            let data_ids = GetSongId(data['subsonic-response'].playQueue.entry)
-            dispatch(
-              playTracks(
-                res,
-                data_ids,
-                data['subsonic-response'].playQueue.current
-              )
-            )
-            audioInstance.playByIndex(
-              data_ids.indexOf(data['subsonic-response'].playQueue.current)
-            )
-          })
-          .catch((err) => {
-            console.log(err)
-          })
-      })
-      .catch((err) => {
-        console.log(err)
-      })
-    return
-  }, [dispatch, audioInstance])
-
   const onAudioProgress = useCallback(
     (info) => {
       if (info.ended) {
@@ -227,6 +172,7 @@ const Player = () => {
           let song = playerState.queue[i]['trackId']
           ids += `&id=${song}`
         }
+        console.log(ids)
         subsonic.syncPlayQueue(currentPlaying(info).data, ids)
       }
     },
@@ -259,15 +205,11 @@ const Player = () => {
     [dispatch, dataProvider]
   )
 
-  const onCoverClick = useCallback(
-    (mode, audioLists, audioInfo) => {
-      if (mode === 'full' && audioInfo?.song?.albumId) {
-        window.location.href = `#/album/${audioInfo.song.albumId}/show`
-      }
-      updateQueue()
-    },
-    [updateQueue]
-  )
+  const onCoverClick = useCallback((mode, audioLists, audioInfo) => {
+    if (mode === 'full' && audioInfo?.song?.albumId) {
+      window.location.href = `#/album/${audioInfo.song.albumId}/show`
+    }
+  }, [])
 
   const onBeforeDestroy = useCallback(() => {
     return new Promise((resolve, reject) => {
