@@ -6,8 +6,16 @@ import { UpdateQueueButton } from '../common/UpdateQueueButton'
 import { keyMap } from '../hotkeys'
 import config from '../config'
 
-const Placeholder = () =>
-  config.enableFavourites && <LoveButton disabled={true} resource={'song'} />
+const Placeholder = () => {
+  return (
+    <>
+      {config.enableFavourites && (
+        <LoveButton disabled={true} resource={'song'} />
+      )}
+      <UpdateQueueButton label={'queue'} />
+    </>
+  )
+}
 
 const Toolbar = ({ id }) => {
   const { data, loading } = useGetOne('song', id)
