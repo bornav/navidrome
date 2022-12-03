@@ -2,7 +2,7 @@ import React, { useCallback } from 'react'
 import { useGetOne } from 'react-admin'
 import { GlobalHotKeys } from 'react-hotkeys'
 import { LoveButton, useToggleLove } from '../common'
-import { UpdateQueueButton } from '../common'
+import { UpdateQueueButton } from '../common/UpdateQueueButton'
 import { keyMap } from '../hotkeys'
 import config from '../config'
 

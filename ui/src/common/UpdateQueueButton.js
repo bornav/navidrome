@@ -8,10 +8,8 @@ import { GetSongId } from '../audioplayer/Player'
 import { httpClient } from '../dataProvider'
 import subsonic from '../subsonic'
 
-const UpdateQueueButton = (size) => {
+const UpdateQueueButton = ({ record, size, className }) => {
   const dispatch = useDispatch()
-
-  //gets the data of the currently playing songs and formats the data
 
   //this one is used when we use the album list to play the songs(does not support duplicate songs)
   const queueBuilderId = (data, object) => {
@@ -42,6 +40,7 @@ const UpdateQueueButton = (size) => {
   }
 
   const updateQueueButton = useCallback(() => {
+    //gets the data of the currently playing songs and formats the data
     const getSongData = async (data, state) => {
       let idString = `/api/song?id=${data[0].id}`
       for (let i = 1; i < data.length; i++) {

@@ -172,7 +172,6 @@ const Player = () => {
           let song = playerState.queue[i]['trackId']
           ids += `&id=${song}`
         }
-        console.log(ids)
         subsonic.syncPlayQueue(currentPlaying(info).data, ids)
       }
     },
