@@ -67,6 +67,16 @@ export const playTracks = (data, ids, selectedId) => {
     data: songs,
   }
 }
+//to be implemented on the Player Side
+export const playTracksByTimestamp = (data, ids, selectedId, timestamp) => {
+  const songs = filterSongs(data, ids)
+  return {
+    type: PLAYER_PLAY_TRACKS,
+    id: selectedId || Object.keys(songs)[0],
+    data: songs,
+    timestamp,
+  }
+}
 
 export const syncQueue = (audioInfo, audioLists) => ({
   type: PLAYER_SYNC_QUEUE,
