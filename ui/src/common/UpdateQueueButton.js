@@ -102,6 +102,7 @@ const UpdateQueueButton = ({ record, size, className }) => {
 
   return (
     <IconButton
+      id="updateQueue"
       onClick={(e) => {
         updateQueueButton()
       }}
@@ -120,5 +121,27 @@ UpdateQueueButton.defaultProps = {
   label: 'Get updated Queue',
   size: 'small',
 }
+const GetTime = async (localSt) => {
+  var dateCache
+  if (localStorage.getItem('username') === null) {
+    return
+  }
+  if (localStorage.getItem('sync') === 'false') {
+    return
+  }
 
-export { UpdateQueueButton }
+  if (typeof localSt !== 'undefined') {
+    dateCache = localSt.player.lastUpdatedAt
+  }
+  subsonic.getStoredQueue().then((res) => {
+    if (res.json['subsonic-response'].status === 'ok') {
+      let date = Date.parse(res.json['subsonic-response'].playQueue.changed)
+
+      if (typeof dateCache === 'undefined' || date > dateCache) {
+        document.getElementById('updateQueue').click()
+      }
+    }
+  })
+}
+
+export { UpdateQueueButton, GetTime }
