@@ -37,6 +37,7 @@ type Subsonic struct {
 	ArtistWithAlbumsID3 *ArtistWithAlbumsID3 `xml:"artist,omitempty"                      json:"artist,omitempty"`
 	AlbumWithSongsID3   *AlbumWithSongsID3   `xml:"album,omitempty"                       json:"album,omitempty"`
 
+	AlbumInfo     *AlbumInfo     `xml:"albumInfo,omitempty"                               json:"albumInfo,omitempty"`
 	ArtistInfo    *ArtistInfo    `xml:"artistInfo,omitempty"                              json:"artistInfo,omitempty"`
 	ArtistInfo2   *ArtistInfo2   `xml:"artistInfo2,omitempty"                             json:"artistInfo2,omitempty"`
 	SimilarSongs  *SimilarSongs  `xml:"similarSongs,omitempty"                            json:"similarSongs,omitempty"`
@@ -47,6 +48,8 @@ type Subsonic struct {
 	Bookmarks  *Bookmarks  `xml:"bookmarks,omitempty"                                     json:"bookmarks,omitempty"`
 	ScanStatus *ScanStatus `xml:"scanStatus,omitempty"                                    json:"scanStatus,omitempty"`
 	Lyrics     *Lyrics     `xml:"lyrics,omitempty"                                        json:"lyrics,omitempty"`
+
+	InternetRadioStations *InternetRadioStations `xml:"internetRadioStations,omitempty"  json:"internetRadioStations,omitempty"`
 }
 
 type JsonWrapper struct {
@@ -295,6 +298,15 @@ type Genres struct {
 	Genre []Genre `xml:"genre,omitempty"                      json:"genre,omitempty"`
 }
 
+type AlbumInfo struct {
+	Notes          string `xml:"notes,omitempty"          json:"notes,omitempty"`
+	MusicBrainzID  string `xml:"musicBrainzId,omitempty"      json:"musicBrainzId,omitempty"`
+	LastFmUrl      string `xml:"lastFmUrl,omitempty"          json:"lastFmUrl,omitempty"`
+	SmallImageUrl  string `xml:"smallImageUrl,omitempty"      json:"smallImageUrl,omitempty"`
+	MediumImageUrl string `xml:"mediumImageUrl,omitempty"     json:"mediumImageUrl,omitempty"`
+	LargeImageUrl  string `xml:"largeImageUrl,omitempty"      json:"largeImageUrl,omitempty"`
+}
+
 type ArtistInfoBase struct {
 	Biography      string `xml:"biography,omitempty"          json:"biography,omitempty"`
 	MusicBrainzID  string `xml:"musicBrainzId,omitempty"      json:"musicBrainzId,omitempty"`
@@ -359,4 +371,15 @@ type Lyrics struct {
 	Artist string `xml:"artist,omitempty,attr"  json:"artist,omitempty"`
 	Title  string `xml:"title,omitempty,attr"   json:"title,omitempty"`
 	Value  string `xml:",chardata"              json:"value"`
+}
+
+type InternetRadioStations struct {
+	Radios []Radio `xml:"internetRadioStation"               json:"internetRadioStation,omitempty"`
+}
+
+type Radio struct {
+	ID          string `xml:"id,attr"                    json:"id"`
+	Name        string `xml:"name,attr"                  json:"name"`
+	StreamUrl   string `xml:"streamUrl,attr"             json:"streamUrl"`
+	HomepageUrl string `xml:"homePageUrl,omitempty,attr" json:"homePageUrl,omitempty"`
 }

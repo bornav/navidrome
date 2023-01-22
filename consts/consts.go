@@ -49,6 +49,7 @@ const (
 	ServerReadHeaderTimeout = 3 * time.Second
 
 	ArtistInfoTimeToLive = 24 * time.Hour
+	AlbumInfoTimeToLive  = 7 * 24 * time.Hour
 
 	I18nFolder   = "i18n"
 	SkipScanFile = ".ndignore"
@@ -56,8 +57,8 @@ const (
 	PlaceholderArtistArt = "artist-placeholder.webp"
 	PlaceholderAlbumArt  = "placeholder.png"
 	PlaceholderAvatar    = "logo-192x192.png"
-
-	DefaultUIVolume = 100
+	UICoverArtSize       = 300
+	DefaultUIVolume      = 100
 
 	DefaultHttpClientTimeOut = 10 * time.Second
 
