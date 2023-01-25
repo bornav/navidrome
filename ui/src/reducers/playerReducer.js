@@ -21,6 +21,9 @@ const initialState = {
   lastUpdatedAt: 0,
 }
 
+const timestampRegex =
+  /(\[([0-9]{1,2}:)?([0-9]{1,2}:)([0-9]{1,2})(\.[0-9]{1,2})?\])/g
+
 const mapToAudioLists = (item) => {
   // If item comes from a playlist, trackId is mediaFileId
   const trackId = item.mediaFileId || item.id
@@ -38,8 +41,6 @@ const mapToAudioLists = (item) => {
   }
 
   const { lyrics } = item
-  const timestampRegex =
-    /(\[([0-9]{1,2}:)?([0-9]{1,2}:)([0-9]{1,2})(\.[0-9]{1,2})?\])/g
   return {
     trackId,
     uuid: uuidv4(),

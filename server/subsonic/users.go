@@ -3,6 +3,7 @@ package subsonic
 import (
 	"net/http"
 
+	"github.com/navidrome/navidrome/conf"
 	"github.com/navidrome/navidrome/model/request"
 	"github.com/navidrome/navidrome/server/subsonic/responses"
 )
@@ -20,8 +21,9 @@ func (api *Router) GetUser(r *http.Request) (*responses.Subsonic, error) {
 	response.User.Email = loggedUser.Email
 	response.User.SyncPlaylist = loggedUser.SyncPlaylist
 	response.User.StreamRole = true
-	response.User.DownloadRole = true
 	response.User.ScrobblingEnabled = true
+	response.User.DownloadRole = conf.Server.EnableDownloads
+	response.User.ShareRole = conf.Server.DevEnableShare
 	return response, nil
 }
 
@@ -35,9 +37,10 @@ func (api *Router) GetUsers(r *http.Request) (*responses.Subsonic, error) {
 	user.AdminRole = loggedUser.IsAdmin
 	user.Email = loggedUser.Email
 	user.StreamRole = true
-	user.DownloadRole = true
 	user.ScrobblingEnabled = true
 	user.SyncPlaylist = loggedUser.SyncPlaylist
+	user.DownloadRole = conf.Server.EnableDownloads
+	user.ShareRole = conf.Server.DevEnableShare
 	response := newResponse()
 	response.Users = &responses.Users{User: []responses.User{user}}
 	return response, nil
