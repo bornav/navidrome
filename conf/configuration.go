@@ -2,6 +2,7 @@ package conf
 
 import (
 	"fmt"
+	"net/url"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -28,13 +29,19 @@ type configOptions struct {
 	ScanSchedule                 string
 	SessionTimeout               time.Duration
 	BaseURL                      string
+	BasePath                     string
+	BaseHost                     string
+	BaseScheme                   string
 	UILoginBackgroundURL         string
+	UIWelcomeMessage             string
+	MaxSidebarPlaylists          int
 	EnableTranscodingConfig      bool
 	EnableDownloads              bool
 	EnableExternalServices       bool
 	EnableMediaFileCoverArt      bool
 	TranscodingCacheSize         string
 	ImageCacheSize               string
+	EnableArtworkPrecache        bool
 	AutoImportPlaylists          bool
 	PlaylistsPath                string
 	AutoTranscodeDownload        bool
@@ -44,10 +51,9 @@ type configOptions struct {
 	IgnoredArticles              string
 	IndexGroups                  string
 	SubsonicArtistParticipations bool
-	ProbeCommand                 string
+	FFmpegPath                   string
 	CoverArtPriority             string
 	CoverJpegQuality             int
-	UIWelcomeMessage             string
 	EnableGravatar               bool
 	EnableFavourites             bool
 	EnableStarRating             bool
@@ -85,6 +91,8 @@ type configOptions struct {
 	DevArtworkMaxRequests            int
 	DevArtworkThrottleBacklogLimit   int
 	DevArtworkThrottleBacklogTimeout time.Duration
+	DevArtistInfoTimeToLive          time.Duration
+	DevAlbumInfoTimeToLive           time.Duration
 }
 
 type scannerOptions struct {
@@ -147,6 +155,19 @@ func Load() {
 
 	if err := validateScanSchedule(); err != nil {
 		os.Exit(1)
+	}
+
+	if Server.BaseURL != "" {
+		u, err := url.Parse(Server.BaseURL)
+		if err != nil {
+			_, _ = fmt.Fprintf(os.Stderr, "FATAL: Invalid BaseURL %s: %s\n", Server.BaseURL, err.Error())
+			os.Exit(1)
+		}
+		Server.BasePath = u.Path
+		u.Path = ""
+		u.RawQuery = ""
+		Server.BaseHost = u.Host
+		Server.BaseScheme = u.Scheme
 	}
 
 	// Print current configuration if log level is Debug
@@ -224,9 +245,12 @@ func init() {
 	viper.SetDefault("scanschedule", "@every 1m")
 	viper.SetDefault("baseurl", "")
 	viper.SetDefault("uiloginbackgroundurl", consts.DefaultUILoginBackgroundURL)
+	viper.SetDefault("uiwelcomemessage", "")
+	viper.SetDefault("maxsidebarplaylists", consts.DefaultMaxSidebarPlaylists)
 	viper.SetDefault("enabletranscodingconfig", false)
 	viper.SetDefault("transcodingcachesize", "100MB")
 	viper.SetDefault("imagecachesize", "100MB")
+	viper.SetDefault("enableartworkprecache", true)
 	viper.SetDefault("autoimportplaylists", true)
 	viper.SetDefault("playlistspath", consts.DefaultPlaylistsPath)
 	viper.SetDefault("enabledownloads", true)
@@ -239,10 +263,9 @@ func init() {
 	viper.SetDefault("ignoredarticles", "The El La Los Las Le Les Os As O A")
 	viper.SetDefault("indexgroups", "A B C D E F G H I J K L M N O P Q R S T U V W X-Z(XYZ) [Unknown]([)")
 	viper.SetDefault("subsonicartistparticipations", false)
-	viper.SetDefault("probecommand", "ffmpeg %s -f ffmetadata")
+	viper.SetDefault("ffmpegpath", "")
 	viper.SetDefault("coverartpriority", "cover.*, folder.*, front.*, embedded, external")
 	viper.SetDefault("coverjpegquality", 75)
-	viper.SetDefault("uiwelcomemessage", "")
 	viper.SetDefault("enablegravatar", false)
 	viper.SetDefault("enablefavourites", true)
 	viper.SetDefault("enablestarrating", true)
@@ -250,7 +273,7 @@ func init() {
 	viper.SetDefault("defaulttheme", "Dark")
 	viper.SetDefault("defaultlanguage", "")
 	viper.SetDefault("defaultuivolume", consts.DefaultUIVolume)
-	viper.SetDefault("enablereplaygain", false)
+	viper.SetDefault("enablereplaygain", true)
 	viper.SetDefault("enablecoveranimation", true)
 	viper.SetDefault("gatrackingid", "")
 	viper.SetDefault("enablelogredacting", true)
@@ -286,9 +309,11 @@ func init() {
 	viper.SetDefault("devenablebufferedscrobble", true)
 	viper.SetDefault("devsidebarplaylists", true)
 	viper.SetDefault("devshowartistpage", true)
-	viper.SetDefault("devartworkmaxrequests", number.Max(2, runtime.NumCPU()))
+	viper.SetDefault("devartworkmaxrequests", number.Max(2, runtime.NumCPU()/3))
 	viper.SetDefault("devartworkthrottlebackloglimit", consts.RequestThrottleBacklogLimit)
 	viper.SetDefault("devartworkthrottlebacklogtimeout", consts.RequestThrottleBacklogTimeout)
+	viper.SetDefault("devartistinfotimetolive", consts.ArtistInfoTimeToLive)
+	viper.SetDefault("devalbuminfotimetolive", consts.AlbumInfoTimeToLive)
 }
 
 func InitConfig(cfgFile string) {
@@ -311,6 +336,7 @@ func InitConfig(cfgFile string) {
 	err := viper.ReadInConfig()
 	if viper.ConfigFileUsed() != "" && err != nil {
 		_, _ = fmt.Fprintln(os.Stderr, "FATAL: Navidrome could not open config file: ", err)
+		os.Exit(1)
 	}
 }
 
