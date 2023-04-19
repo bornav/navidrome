@@ -88,7 +88,7 @@ const syncPlayQueue = (current, queue) => {
       )
 }
 const syncTimePlayed = (current) => {
-  //add the time to a enviramental variable or to sync settings option
+  // TODO: add the time to a enviramental variable or to sync settings option
   return current.duration > 480
     ? `&position=${Math.trunc(current.currentTime) * 1000}`
     : ''

@@ -73,7 +73,7 @@ func buildAuthPayload(user *model.User) map[string]interface{} {
 		"name":     user.Name,
 		"username": user.UserName,
 		"isAdmin":  user.IsAdmin,
-		"sync":     user.SyncPlaylist,
+		"sync":     user.SyncPlayqueue,
 	}
 	if conf.Server.EnableGravatar && user.Email != "" {
 		payload["avatar"] = gravatar.Url(user.Email, 50)

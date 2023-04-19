@@ -97,9 +97,6 @@ const authProvider = {
       avatar: localStorage.getItem('avatar'),
     }
   },
-  getSync: () => {
-    return localStorage.getItem('sync')
-  },
 }
 
 const removeItems = () => {

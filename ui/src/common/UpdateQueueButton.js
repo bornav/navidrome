@@ -3,8 +3,7 @@ import PropTypes from 'prop-types'
 import CloudDownloadOutlinedIcon from '@material-ui/icons/CloudDownloadOutlined'
 import { IconButton } from '@material-ui/core'
 import { useDispatch } from 'react-redux'
-import { playTracks, playTracksByTimestamp } from '../actions'
-import { GetSongId } from '../audioplayer/Player'
+import { playTracks } from '../actions'
 import { httpClient } from '../dataProvider'
 import subsonic from '../subsonic'
 
@@ -69,7 +68,9 @@ const UpdateQueueButton = ({ record, size, className }) => {
             let timestamp
             timestamp = data['subsonic-response'].playQueue.position
             if (data['subsonic-response'].playQueue.current.length > 4) {
-              data_ids = GetSongId(data['subsonic-response'].playQueue.entry)
+              data_ids = data['subsonic-response'].playQueue.entry.map(
+                (s) => s.id
+              )
               res_new = res
               current = res[data['subsonic-response'].playQueue.current].id
             } else {
@@ -81,15 +82,10 @@ const UpdateQueueButton = ({ record, size, className }) => {
                 temp.id = `${i + 1}`
                 res_new[i + 1] = temp
               }
-
               data_ids = Array.from({ length: size }, (v, i) => `${++i}`)
               current = data['subsonic-response'].playQueue.current
             }
-            timestamp === undefined
-              ? dispatch(playTracks(res_new, data_ids, current))
-              : dispatch(
-                  playTracksByTimestamp(res_new, data_ids, current, timestamp)
-                )
+            dispatch(playTracks(res_new, data_ids, current, timestamp))
           })
           .catch((err) => {
             console.log(err)

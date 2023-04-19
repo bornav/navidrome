@@ -34,14 +34,13 @@ const UserList = (props) => {
             record.lastLoginAt && new Date(record.lastLoginAt).toLocaleString()
           }
           tertiaryText={(record) => (record.isAdmin ? '[admin]️' : '')}
-          //quaternaryText={(record) => (record.syncPlaylist ? 'true' : 'false')}
         />
       ) : (
         <Datagrid rowClick="edit">
           <TextField source="userName" />
           <TextField source="name" />
           <BooleanField source="isAdmin" />
-          <BooleanField source="syncPlaylist" />
+          <BooleanField source="syncPlayqueue" />
           <DateField source="lastLoginAt" sortByOrder={'DESC'} />
           <DateField source="updatedAt" sortByOrder={'DESC'} />
         </Datagrid>

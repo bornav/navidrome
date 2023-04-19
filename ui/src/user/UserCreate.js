@@ -64,7 +64,7 @@ const UserCreate = (props) => {
           validate={[required()]}
         />
         <BooleanInput source="isAdmin" defaultValue={false} />
-        <BooleanInput source="syncPlaylist" defaultValue={false} />
+        <BooleanInput source="syncPlayqueue" defaultValue={false} />
       </SimpleForm>
     </Create>
   )

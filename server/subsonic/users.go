@@ -19,7 +19,7 @@ func (api *Router) GetUser(r *http.Request) (*responses.Subsonic, error) {
 	response.User.Username = loggedUser.UserName
 	response.User.AdminRole = loggedUser.IsAdmin
 	response.User.Email = loggedUser.Email
-	response.User.SyncPlaylist = loggedUser.SyncPlaylist
+	response.User.SyncPlayqueue = loggedUser.SyncPlayqueue
 	response.User.StreamRole = true
 	response.User.ScrobblingEnabled = true
 	response.User.DownloadRole = conf.Server.EnableDownloads
@@ -38,7 +38,7 @@ func (api *Router) GetUsers(r *http.Request) (*responses.Subsonic, error) {
 	user.Email = loggedUser.Email
 	user.StreamRole = true
 	user.ScrobblingEnabled = true
-	user.SyncPlaylist = loggedUser.SyncPlaylist
+	user.SyncPlayqueue = loggedUser.SyncPlayqueue
 	user.DownloadRole = conf.Server.EnableDownloads
 	user.ShareRole = conf.Server.EnableSharing
 	response := newResponse()

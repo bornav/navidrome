@@ -59,16 +59,7 @@ export const shuffleTracks = (data, ids) => {
   }
 }
 
-export const playTracks = (data, ids, selectedId) => {
-  const songs = filterSongs(data, ids)
-  return {
-    type: PLAYER_PLAY_TRACKS,
-    id: selectedId || Object.keys(songs)[0],
-    data: songs,
-  }
-}
-//to be implemented on the Player Side
-export const playTracksByTimestamp = (data, ids, selectedId, timestamp) => {
+export const playTracks = (data, ids, selectedId, timestamp) => {
   const songs = filterSongs(data, ids)
   return {
     type: PLAYER_PLAY_TRACKS,

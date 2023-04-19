@@ -349,10 +349,4 @@ const Player = () => {
   )
 }
 
-const GetSongId = (data) => {
-  let songIDs = []
-  for (var i = 0; i < data.length; i++) songIDs.push(data[i].id)
-  return songIDs
-}
-
-export { Player, GetSongId }
+export { Player }

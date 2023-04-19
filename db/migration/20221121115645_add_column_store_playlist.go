@@ -7,10 +7,10 @@ import (
 )
 
 func init() {
-	goose.AddMigration(upAddSyncPlaylistColumnToUserTable, downAddSyncPlaylistColumnToUserTable)
+	goose.AddMigration(upAddSyncPlayqueueColumnToUserTable, downAddSyncPlayqueueColumnToUserTable)
 }
 
-func upAddSyncPlaylistColumnToUserTable(tx *sql.Tx) error {
+func upAddSyncPlayqueueColumnToUserTable(tx *sql.Tx) error {
 	_, err := tx.Exec(`
 	create table user_dg_tmp
 	(
@@ -26,7 +26,7 @@ func upAddSyncPlaylistColumnToUserTable(tx *sql.Tx) error {
 		last_access_at datetime,
 		created_at datetime not null,
 		updated_at datetime not null,
-		sync_playlist bool default FALSE not null
+		sync_playqueue bool default FALSE not null
 	);
 
 	insert into user_dg_tmp(id, user_name, name, email, password, is_admin, last_login_at, last_access_at, created_at, updated_at) select id, user_name, name, email, password, is_admin, last_login_at, last_access_at, created_at, updated_at from user;
@@ -42,7 +42,7 @@ func upAddSyncPlaylistColumnToUserTable(tx *sql.Tx) error {
 	return forceFullRescan(tx)
 }
 
-func downAddSyncPlaylistColumnToUserTable(tx *sql.Tx) error {
+func downAddSyncPlayqueueColumnToUserTable(tx *sql.Tx) error {
 	_, err := tx.Exec(`
 	create table user_dg_tmp
 	(
