@@ -27,7 +27,6 @@ import {
   useResourceRefresh,
   DateField,
   SizeField,
-  ArtistLinkField,
 } from '../common'
 import config from '../config'
 import ExpandInfoDialog from '../dialogs/ExpandInfoDialog'
@@ -111,7 +110,7 @@ const AlbumSongs = (props) => {
           showTrackNumbers={!isDesktop}
         />
       ),
-      artist: isDesktop && <ArtistLinkField source="artist" />,
+      artist: isDesktop && <TextField source="artist" sortable={false} />,
       duration: <DurationField source="duration" sortable={false} />,
       year: isDesktop && (
         <FunctionField

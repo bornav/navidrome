@@ -6,7 +6,8 @@ import (
 
 	"github.com/deluan/sanitize"
 	"github.com/navidrome/navidrome/log"
-	"github.com/pressly/goose/v3"
+
+	"github.com/pressly/goose"
 )
 
 func init() {

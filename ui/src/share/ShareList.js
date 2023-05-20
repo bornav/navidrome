@@ -1,7 +1,6 @@
 import {
   Datagrid,
   FunctionField,
-  BooleanField,
   List,
   NumberField,
   SimpleList,
@@ -25,7 +24,6 @@ export const FormatInfo = ({ record, size }) => {
 
 const ShareList = (props) => {
   const isXsmall = useMediaQuery((theme) => theme.breakpoints.down('xs'))
-  const isDesktop = useMediaQuery((theme) => theme.breakpoints.up('lg'))
   const translate = useTranslate()
   const notify = useNotify()
 
@@ -103,13 +101,10 @@ const ShareList = (props) => {
           />
           <TextField source="username" />
           <TextField source="description" />
-          {isDesktop && <TextField source="contents" />}
-          {isDesktop && <FormatInfo source="format" />}
-          {config.enableDownloads && <BooleanField source="downloadable" />}
+          <TextField source="contents" />
+          <FormatInfo source="format" />
           <NumberField source="visitCount" />
-          {isDesktop && (
-            <DateField source="lastVisitedAt" showTime sortByOrder={'DESC'} />
-          )}
+          <DateField source="lastVisitedAt" showTime sortByOrder={'DESC'} />
           <DateField source="expiresAt" showTime />
         </Datagrid>
       )}

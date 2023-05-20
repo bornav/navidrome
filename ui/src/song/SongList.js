@@ -137,7 +137,6 @@ const SongList = (props) => {
       bpm: isDesktop && <NumberField source="bpm" />,
       genre: <TextField source="genre" />,
       comment: <TextField source="comment" />,
-      path: <TextField source="path" />,
       createdAt: <DateField source="createdAt" showTime />,
     }
   }, [isDesktop, classes.ratingField])
@@ -152,7 +151,6 @@ const SongList = (props) => {
       'albumArtist',
       'genre',
       'comment',
-      'path',
       'createdAt',
     ],
   })

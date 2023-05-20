@@ -16,13 +16,7 @@ import (
 )
 
 func newResponse() *responses.Subsonic {
-	return &responses.Subsonic{
-		Status:        "ok",
-		Version:       Version,
-		Type:          consts.AppName,
-		ServerVersion: consts.Version,
-		OpenSubsonic:  true,
-	}
+	return &responses.Subsonic{Status: "ok", Version: Version, Type: consts.AppName, ServerVersion: consts.Version}
 }
 
 func requiredParamString(r *http.Request, param string) (string, error) {
@@ -91,8 +85,8 @@ func toArtist(r *http.Request, a model.Artist) responses.Artist {
 	artist := responses.Artist{
 		Id:             a.ID,
 		Name:           a.Name,
-		AlbumCount:     int32(a.AlbumCount),
-		UserRating:     int32(a.Rating),
+		AlbumCount:     a.AlbumCount,
+		UserRating:     a.Rating,
 		CoverArt:       a.CoverArtID().String(),
 		ArtistImageUrl: public.ImageURL(r, a.CoverArtID(), 600),
 	}
@@ -106,10 +100,10 @@ func toArtistID3(r *http.Request, a model.Artist) responses.ArtistID3 {
 	artist := responses.ArtistID3{
 		Id:             a.ID,
 		Name:           a.Name,
-		AlbumCount:     int32(a.AlbumCount),
+		AlbumCount:     a.AlbumCount,
 		CoverArt:       a.CoverArtID().String(),
 		ArtistImageUrl: public.ImageURL(r, a.CoverArtID(), 600),
-		UserRating:     int32(a.Rating),
+		UserRating:     a.Rating,
 	}
 	if a.Starred {
 		artist.Starred = &a.StarredAt
@@ -122,8 +116,8 @@ func toGenres(genres model.Genres) *responses.Genres {
 	for i, g := range genres {
 		response[i] = responses.Genre{
 			Name:       g.Name,
-			SongCount:  int32(g.SongCount),
-			AlbumCount: int32(g.AlbumCount),
+			SongCount:  g.SongCount,
+			AlbumCount: g.AlbumCount,
 		}
 	}
 	return &responses.Genres{Genre: response}
@@ -148,14 +142,14 @@ func childFromMediaFile(ctx context.Context, mf model.MediaFile) responses.Child
 	child.IsDir = false
 	child.Parent = mf.AlbumID
 	child.Album = mf.Album
-	child.Year = int32(mf.Year)
+	child.Year = mf.Year
 	child.Artist = mf.Artist
 	child.Genre = mf.Genre
-	child.Track = int32(mf.TrackNumber)
-	child.Duration = int32(mf.Duration)
+	child.Track = mf.TrackNumber
+	child.Duration = int(mf.Duration)
 	child.Size = mf.Size
 	child.Suffix = mf.Suffix
-	child.BitRate = int32(mf.BitRate)
+	child.BitRate = mf.BitRate
 	child.CoverArt = mf.CoverArtID().String()
 	child.ContentType = mf.ContentType()
 	player, ok := request.PlayerFrom(ctx)
@@ -164,7 +158,7 @@ func childFromMediaFile(ctx context.Context, mf model.MediaFile) responses.Child
 	} else {
 		child.Path = fakePath(mf)
 	}
-	child.DiscNumber = int32(mf.DiscNumber)
+	child.DiscNumber = mf.DiscNumber
 	child.Created = &mf.CreatedAt
 	child.AlbumId = mf.AlbumID
 	child.ArtistId = mf.ArtistID
@@ -176,7 +170,7 @@ func childFromMediaFile(ctx context.Context, mf model.MediaFile) responses.Child
 	if mf.Starred {
 		child.Starred = &mf.StarredAt
 	}
-	child.UserRating = int32(mf.Rating)
+	child.UserRating = mf.Rating
 
 	format, _ := getTranscoding(ctx)
 	if mf.Suffix != "" && format != "" && mf.Suffix != format {
@@ -215,14 +209,14 @@ func childFromAlbum(_ context.Context, al model.Album) responses.Child {
 	child.Name = al.Name
 	child.Album = al.Name
 	child.Artist = al.AlbumArtist
-	child.Year = int32(al.MaxYear)
+	child.Year = al.MaxYear
 	child.Genre = al.Genre
 	child.CoverArt = al.CoverArtID().String()
 	child.Created = &al.CreatedAt
 	child.Parent = al.AlbumArtistID
 	child.ArtistId = al.AlbumArtistID
-	child.Duration = int32(al.Duration)
-	child.SongCount = int32(al.SongCount)
+	child.Duration = int(al.Duration)
+	child.SongCount = al.SongCount
 	if al.Starred {
 		child.Starred = &al.StarredAt
 	}
@@ -230,7 +224,7 @@ func childFromAlbum(_ context.Context, al model.Album) responses.Child {
 	if al.PlayCount > 0 {
 		child.Played = &al.PlayDate
 	}
-	child.UserRating = int32(al.Rating)
+	child.UserRating = al.Rating
 	return child
 }
 

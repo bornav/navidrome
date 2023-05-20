@@ -26,7 +26,7 @@
                 "bpm": "BPM",
                 "playDate": "Viimeksi kuunneltu",
                 "channels": "Kanavat",
-                "createdAt": "Lisätty"
+                "createdAt": ""
             },
             "actions": {
                 "addToQueue": "Lisää jonoon",
@@ -53,8 +53,8 @@
                 "updatedAt": "Päivitetty",
                 "comment": "Kommentti",
                 "rating": "Arvostelu",
-                "createdAt": "Lisätty",
-                "size": "Koko"
+                "createdAt": "",
+                "size": ""
             },
             "actions": {
                 "playAll": "Soita",
@@ -64,7 +64,7 @@
                 "addToPlaylist": "Lisää soittolistaan",
                 "download": "Lataa",
                 "info": "Info",
-                "share": "Jaa"
+                "share": ""
             },
             "lists": {
                 "all": "Kaikki",
@@ -85,7 +85,7 @@
                 "playCount": "Kuuntelukertoja",
                 "rating": "Arvostelu",
                 "genre": "Tyylilaji",
-                "size": "Koko"
+                "size": ""
             }
         },
         "user": {
@@ -165,33 +165,32 @@
             }
         },
         "radio": {
-            "name": "Radio |||| Radiot",
+            "name": "",
             "fields": {
-                "name": "Nimi",
-                "streamUrl": "Streamin URL",
-                "homePageUrl": "Kotisivu",
-                "updatedAt": "Päivitetty",
-                "createdAt": "Luotu"
+                "name": "",
+                "streamUrl": "",
+                "homePageUrl": "",
+                "updatedAt": "",
+                "createdAt": ""
             },
             "actions": {
-                "playNow": "Kuuntele nyt"
+                "playNow": ""
             }
         },
         "share": {
-            "name": "Jako |||| Jaot",
+            "name": "",
             "fields": {
-                "username": "Jakanut",
-                "url": "URL",
-                "description": "Kuvaus",
-                "contents": "Sisältö",
-                "expiresAt": "Vanhenee",
-                "lastVisitedAt": "Viimeksi vierailtu",
-                "visitCount": "Vierailuja",
-                "format": "Formaatti",
-                "maxBitRate": "Max. bittinopeus",
-                "updatedAt": "Päivitetty",
-                "createdAt": "Luotu",
-                "downloadable": "Salli lataus?"
+                "username": "",
+                "url": "",
+                "description": "",
+                "contents": "",
+                "expiresAt": "",
+                "lastVisitedAt": "",
+                "visitCount": "",
+                "format": "",
+                "maxBitRate": "",
+                "updatedAt": "",
+                "createdAt": ""
             }
         }
     },
@@ -222,7 +221,7 @@
             "oneOf": "Pitää olla joku näistä: %{options}",
             "regex": "Pitää olla määrätyssä muodossa (regexp): %{pattern}",
             "unique": "Pitää olla yksilöllinen",
-            "url": "Virheellinen URL"
+            "url": ""
         },
         "action": {
             "add_filter": "Lisää suodatin",
@@ -252,9 +251,9 @@
             "close_menu": "Sulje valikko",
             "unselect": "Poista valinta",
             "skip": "Ohita",
-            "bulk_actions_mobile": "1 |||| %{smart_count}",
-            "share": "Jako",
-            "download": "Lataa"
+            "bulk_actions_mobile": "",
+            "share": "",
+            "download": ""
         },
         "boolean": {
             "true": "Kyllä",
@@ -362,14 +361,14 @@
         "listenBrainzLinkFailure": "Ei voitu linkittää ListenBrainz palveluun: %{error}",
         "listenBrainzUnlinkSuccess": "Linkitys ListenBrainz poistettu ja kuuntelutottumus poistettu käytöstä",
         "listenBrainzUnlinkFailure": "ListenBrainz linkitystä ei voitu poistaa",
-        "downloadOriginalFormat": "Lataa alkuperäisessä formaatissa",
-        "shareOriginalFormat": "Jaa alkuperäisessä formaatissa",
-        "shareDialogTitle": "Jaa %{resource} '%{name}'",
-        "shareBatchDialogTitle": "Jako 1 %{resource} |||| Jako %{smart_count} %{resource}",
-        "shareSuccess": "Osoite kopioitu leikepöydälle: %{url}",
-        "shareFailure": "Virhe kopioitaessa %{url} leikepöydälle",
-        "downloadDialogTitle": "Lataa %{resource} '%{name}' (%{size})",
-        "shareCopyToClipboard": "Kopio leikepöydälle: Ctrl+C, Enter"
+        "downloadOriginalFormat": "",
+        "shareOriginalFormat": "",
+        "shareDialogTitle": "",
+        "shareBatchDialogTitle": "",
+        "shareSuccess": "",
+        "shareFailure": "",
+        "downloadDialogTitle": "",
+        "shareCopyToClipboard": ""
     },
     "menu": {
         "library": "Kirjasto",
@@ -385,12 +384,12 @@
                 "desktop_notifications": "Työpöytäilmoitukset",
                 "lastfmScrobbling": "Kuuntelutottumuksen lähetys Last.fm-palveluun",
                 "listenBrainzScrobbling": "Kuuntelutottumuksen lähetys ListenBrainz-palveluun",
-                "replaygain": "RepleyGain -tila",
-                "preAmp": "ReplayGain esivahvistus (dB)",
+                "replaygain": "",
+                "preAmp": "",
                 "gain": {
-                    "none": "Pois käytöstä",
-                    "album": "Käytä albumin äänen normalisointia",
-                    "track": "Käytä kappaleen äänen normalisointia"
+                    "none": "",
+                    "album": "",
+                    "track": ""
                 }
             }
         },

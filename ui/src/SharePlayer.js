@@ -1,6 +1,6 @@
 import ReactJkMusicPlayer from 'navidrome-music-player'
-import config, { shareInfo } from '../config'
-import { shareCoverUrl, shareDownloadUrl, shareStreamUrl } from '../utils'
+import { shareInfo } from './config'
+import { shareCoverUrl, shareStreamUrl } from './utils'
 
 import { makeStyles } from '@material-ui/core/styles'
 
@@ -34,17 +34,12 @@ const SharePlayer = () => {
       duration: s.duration,
     }
   })
-  const onBeforeAudioDownload = () => {
-    return Promise.resolve({
-      src: shareDownloadUrl(shareInfo?.id),
-    })
-  }
   const options = {
     audioLists: list,
     mode: 'full',
     toggleMode: false,
     mobileMediaQuery: '',
-    showDownload: shareInfo?.downloadable && config.enableDownloads,
+    showDownload: false,
     showReload: false,
     showMediaSession: true,
     theme: 'auto',
@@ -54,13 +49,7 @@ const SharePlayer = () => {
     spaceBar: true,
     volumeFade: { fadeIn: 200, fadeOut: 200 },
   }
-  return (
-    <ReactJkMusicPlayer
-      {...options}
-      className={classes.player}
-      onBeforeAudioDownload={onBeforeAudioDownload}
-    />
-  )
+  return <ReactJkMusicPlayer {...options} className={classes.player} />
 }
 
 export default SharePlayer

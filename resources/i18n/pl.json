@@ -190,8 +190,7 @@
                 "format": "Format",
                 "maxBitRate": "Maks. Bit Rate",
                 "updatedAt": "Zaktualizowano",
-                "createdAt": "Stworzono",
-                "downloadable": "Zezwolić Na Pobieranie?"
+                "createdAt": "Stworzono"
             }
         }
     },
@@ -269,8 +268,8 @@
             "loading": "Ładowanie",
             "not_found": "Nie Znaleziono",
             "show": "%{name} #%{id}\n",
-            "empty": "Brakuje elementu typu %{name}.",
-            "invite": "Czy chcesz dodać nowy?"
+            "empty": "Nie ma jeszcze żadnego %{name}.",
+            "invite": "Czy chcesz dodać nowe?"
         },
         "input": {
             "file": {

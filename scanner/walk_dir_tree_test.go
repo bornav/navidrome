@@ -34,14 +34,9 @@ var _ = Describe("walk_dir_tree", func() {
 
 			Eventually(errC).Should(Receive(nil))
 			Expect(collected[baseDir]).To(MatchFields(IgnoreExtras, Fields{
-				"Images":          BeEmpty(),
+				"Images":          ConsistOf("cover.jpg", "front.png"),
 				"HasPlaylist":     BeFalse(),
 				"AudioFilesCount": BeNumerically("==", 5),
-			}))
-			Expect(collected[filepath.Join(baseDir, "artist", "an-album")]).To(MatchFields(IgnoreExtras, Fields{
-				"Images":          ConsistOf("cover.jpg", "front.png", "artist.png"),
-				"HasPlaylist":     BeFalse(),
-				"AudioFilesCount": BeNumerically("==", 1),
 			}))
 			Expect(collected[filepath.Join(baseDir, "playlists")].HasPlaylist).To(BeTrue())
 			Expect(collected).To(HaveKey(filepath.Join(baseDir, "symlink2dir")))
@@ -82,10 +77,6 @@ var _ = Describe("walk_dir_tree", func() {
 		})
 		It("returns false when folder name starts with ellipses", func() {
 			dirEntry, _ := getDirEntry(baseDir, "...unhidden_folder")
-			Expect(isDirIgnored(baseDir, dirEntry)).To(BeFalse())
-		})
-		It("returns false when folder name is $Recycle.Bin", func() {
-			dirEntry, _ := getDirEntry(baseDir, "$Recycle.Bin")
 			Expect(isDirIgnored(baseDir, dirEntry)).To(BeFalse())
 		})
 	})

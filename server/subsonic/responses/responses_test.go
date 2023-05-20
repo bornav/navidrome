@@ -19,13 +19,7 @@ import (
 var _ = Describe("Responses", func() {
 	var response *Subsonic
 	BeforeEach(func() {
-		response = &Subsonic{
-			Status:        "ok",
-			Version:       "1.8.0",
-			Type:          consts.AppName,
-			ServerVersion: "v0.0.0",
-			OpenSubsonic:  true,
-		}
+		response = &Subsonic{Status: "ok", Version: "1.8.0", Type: consts.AppName, ServerVersion: "v0.0.0"}
 	})
 
 	Describe("EmptyResponse", func() {
@@ -221,7 +215,7 @@ var _ = Describe("Responses", func() {
 		Context("with data", func() {
 			BeforeEach(func() {
 				response.User.Email = "navidrome@deluan.com"
-				response.User.Folder = []int32{1}
+				response.User.Folder = []int{1}
 			})
 
 			It("should match .XML", func() {
@@ -253,7 +247,7 @@ var _ = Describe("Responses", func() {
 				u := User{Username: "deluan"}
 				u.Email = "navidrome@deluan.com"
 				u.AdminRole = true
-				u.Folder = []int32{1}
+				u.Folder = []int{1}
 				response.Users = &Users{User: []User{u}}
 			})
 

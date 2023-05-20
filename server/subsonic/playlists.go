@@ -165,9 +165,9 @@ func (api *Router) buildPlaylist(p model.Playlist) *responses.Playlist {
 	pls.Id = p.ID
 	pls.Name = p.Name
 	pls.Comment = p.Comment
-	pls.SongCount = int32(p.SongCount)
+	pls.SongCount = p.SongCount
 	pls.Owner = p.OwnerName
-	pls.Duration = int32(p.Duration)
+	pls.Duration = int(p.Duration)
 	pls.Public = p.Public
 	pls.Created = p.CreatedAt
 	pls.Changed = p.UpdatedAt

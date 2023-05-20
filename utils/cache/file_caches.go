@@ -114,8 +114,8 @@ func (fc *fileCache) Get(ctx context.Context, arg Item) (*CachedStream, error) {
 		log.Trace(ctx, "Cache MISS", "cache", fc.name, "key", key)
 		reader, err := fc.getReader(ctx, arg)
 		if err != nil {
-			_ = r.Close()
-			_ = w.Close()
+			r.Close()
+			w.Close()
 			_ = fc.invalidate(ctx, key)
 			return nil, err
 		}
@@ -211,7 +211,7 @@ func newFSCache(name, cacheSize, cacheFolder string, maxItems int) (fscache.Cach
 	h := fscache.NewLRUHaunterStrategy(lru)
 	cacheFolder = filepath.Join(conf.Server.DataFolder, cacheFolder)
 
-	var fs *spreadFS
+	var fs fscache.FileSystem
 	log.Info(fmt.Sprintf("Creating %s cache", name), "path", cacheFolder, "maxSize", humanize.Bytes(size))
 	fs, err = NewSpreadFS(cacheFolder, 0755)
 	if err != nil {
@@ -224,7 +224,7 @@ func newFSCache(name, cacheSize, cacheFolder string, maxItems int) (fscache.Cach
 		log.Error(fmt.Sprintf("Error initializing %s cache", name), err)
 		return nil, err
 	}
-	ck.SetKeyMapper(fs.KeyMapper)
+	ck.SetKeyMapper(fs.(*spreadFS).KeyMapper)
 
 	return ck, nil
 }

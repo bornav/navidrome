@@ -7,7 +7,7 @@ import (
 
 	"github.com/navidrome/navidrome/consts"
 	"github.com/navidrome/navidrome/log"
-	"github.com/pressly/goose/v3"
+	"github.com/pressly/goose"
 	"golang.org/x/exp/slices"
 )
 

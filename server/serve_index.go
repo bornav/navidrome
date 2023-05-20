@@ -58,7 +58,6 @@ func serveIndex(ds model.DataStore, fs fs.FS, shareInfo *model.Share) http.Handl
 			"devActivityPanel":          conf.Server.DevActivityPanel,
 			"enableUserEditing":         conf.Server.EnableUserEditing,
 			"enableSharing":             conf.Server.EnableSharing,
-			"defaultDownloadableShare":  conf.Server.DefaultDownloadableShare,
 			"devSidebarPlaylists":       conf.Server.DevSidebarPlaylists,
 			"lastFMEnabled":             conf.Server.LastFM.Enabled,
 			"lastFMApiKey":              conf.Server.LastFM.ApiKey,
@@ -122,10 +121,8 @@ func getIndexTemplate(r *http.Request, fs fs.FS) (*template.Template, error) {
 }
 
 type shareData struct {
-	ID           string       `json:"id"`
-	Description  string       `json:"description"`
-	Downloadable bool         `json:"downloadable"`
-	Tracks       []shareTrack `json:"tracks"`
+	Description string       `json:"description"`
+	Tracks      []shareTrack `json:"tracks"`
 }
 
 type shareTrack struct {
@@ -143,9 +140,7 @@ func addShareData(r *http.Request, data map[string]interface{}, shareInfo *model
 		return
 	}
 	sd := shareData{
-		ID:           shareInfo.ID,
-		Description:  shareInfo.Description,
-		Downloadable: shareInfo.Downloadable,
+		Description: shareInfo.Description,
 	}
 	sd.Tracks = slice.Map(shareInfo.Tracks, func(mf model.MediaFile) shareTrack {
 		return shareTrack{

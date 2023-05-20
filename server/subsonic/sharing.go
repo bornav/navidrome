@@ -36,7 +36,7 @@ func (api *Router) buildShare(r *http.Request, share model.Share) responses.Shar
 		Created:     share.CreatedAt,
 		Expires:     &share.ExpiresAt,
 		LastVisited: share.LastVisitedAt,
-		VisitCount:  int32(share.VisitCount),
+		VisitCount:  share.VisitCount,
 	}
 	if resp.Description == "" {
 		resp.Description = share.Contents

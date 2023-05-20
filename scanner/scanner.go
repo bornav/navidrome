@@ -111,13 +111,11 @@ func (s *scanner) startProgressTracker(mediaFolder string) (chan uint32, context
 	go func() {
 		s.broker.SendMessage(ctx, &events.ScanStatus{Scanning: true, Count: 0, FolderCount: 0})
 		defer func() {
-			if status, ok := s.getStatus(mediaFolder); ok {
-				s.broker.SendMessage(ctx, &events.ScanStatus{
-					Scanning:    false,
-					Count:       int64(status.fileCount),
-					FolderCount: int64(status.folderCount),
-				})
-			}
+			s.broker.SendMessage(ctx, &events.ScanStatus{
+				Scanning:    false,
+				Count:       int64(s.status[mediaFolder].fileCount),
+				FolderCount: int64(s.status[mediaFolder].folderCount),
+			})
 		}()
 		for {
 			select {
@@ -160,11 +158,13 @@ func (s *scanner) RescanAll(ctx context.Context, fullRescan bool) error {
 	return nil
 }
 
-func (s *scanner) getStatus(folder string) (scanStatus, bool) {
+func (s *scanner) getStatus(folder string) *scanStatus {
 	s.lock.RLock()
 	defer s.lock.RUnlock()
-	status, ok := s.status[folder]
-	return *status, ok
+	if status, ok := s.status[folder]; ok {
+		return status
+	}
+	return nil
 }
 
 func (s *scanner) incStatusCounter(folder string, numFiles uint32) (totalFolders uint32, totalFiles uint32) {
@@ -199,8 +199,8 @@ func (s *scanner) setStatusEnd(folder string, lastUpdate time.Time) {
 }
 
 func (s *scanner) Status(mediaFolder string) (*StatusInfo, error) {
-	status, ok := s.getStatus(mediaFolder)
-	if !ok {
+	status := s.getStatus(mediaFolder)
+	if status == nil {
 		return nil, errors.New("mediaFolder not found")
 	}
 	return &StatusInfo{

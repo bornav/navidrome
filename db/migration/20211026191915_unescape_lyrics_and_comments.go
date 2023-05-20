@@ -5,7 +5,7 @@ import (
 
 	"github.com/navidrome/navidrome/log"
 	"github.com/navidrome/navidrome/utils"
-	"github.com/pressly/goose/v3"
+	"github.com/pressly/goose"
 )
 
 func init() {

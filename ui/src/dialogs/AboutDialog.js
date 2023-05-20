@@ -22,8 +22,7 @@ const links = {
   twitter: 'twitter.com/navidrome',
   discord: 'discord.gg/xh7j7yF',
   source: 'github.com/navidrome/navidrome',
-  bugReports: 'github.com/navidrome/navidrome/issues/new/choose',
-  featureRequests: 'github.com/navidrome/navidrome/discussions/new',
+  featureRequests: 'github.com/navidrome/navidrome/issues',
 }
 
 const LinkToVersion = ({ version }) => {

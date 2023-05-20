@@ -4,6 +4,7 @@ import { GlobalHotKeys } from 'react-hotkeys'
 import { LoveButton, useToggleLove } from '../common'
 import { UpdateQueueButton } from '../common/UpdateQueueButton'
 import { keyMap } from '../hotkeys'
+import config from '../config'
 
 const Placeholder = () => (
   <>

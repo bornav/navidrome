@@ -4,7 +4,7 @@ import (
 	"database/sql"
 
 	"github.com/navidrome/navidrome/log"
-	"github.com/pressly/goose/v3"
+	"github.com/pressly/goose"
 )
 
 func init() {
