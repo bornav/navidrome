@@ -94,6 +94,7 @@ const UserCreate = (props) => {
             </>
           )}
         </FormDataConsumer>
+        <BooleanInput source="syncPlayqueue" defaultValue={false} />
       </SimpleForm>
     </Create>
   )

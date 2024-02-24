@@ -9,6 +9,8 @@ import { LoveButton, useToggleLove } from '../common'
 import { openSaveQueueDialog } from '../actions'
 import { keyMap } from '../hotkeys'
 import { makeStyles } from '@material-ui/core/styles'
+import config from '../config'
+import { UpdateQueueButton } from '../common/UpdateQueueButton'
 
 const useStyles = makeStyles((theme) => ({
   toolbar: {
@@ -106,11 +108,13 @@ const PlayerToolbar = ({ id, isRadio }) => {
         <li className={`${listItemClass} item`}>
           {saveQueueButton}
           {loveButton}
+          <UpdateQueueButton label="queue" />
         </li>
       ) : (
         <>
           <li className={`${listItemClass} item`}>{saveQueueButton}</li>
           <li className={`${listItemClass} item`}>{loveButton}</li>
+          <UpdateQueueButton label="queue" />
         </>
       )}
     </>
