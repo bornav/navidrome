@@ -16,6 +16,7 @@ func buildUserResponse(user model.User) responses.User {
 		Username:          user.UserName,
 		AdminRole:         user.IsAdmin,
 		Email:             user.Email,
+		SyncPlayqueue:	   user.SyncPlayqueue,
 		StreamRole:        true,
 		ScrobblingEnabled: true,
 		DownloadRole:      conf.Server.EnableDownloads,
